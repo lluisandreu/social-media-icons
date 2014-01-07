@@ -1,0 +1,7 @@
+
+ul.social_media_icons {margin: 0; padding: 0; display: block;}
+ul.social_media_icons li {list-style: none; list-style-image: none; }
+
+ul.inline li {float: left; }
+ul.list li {display: list-item; padding: 5px; }
+

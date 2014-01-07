@@ -1,0 +1,7 @@
+name = Custom Social Icons 
+description = Add and manage social icons in a block
+package = Custom
+core = 7.x
+version = 7.x-1.0
+
+stylesheets[all][] = social_icons.css

@@ -1,0 +1,237 @@
+<?php
+/**
+ * Implements hook_block_info().
+ */
+function social_icons_block_info() {
+  // This example comes from node.module.
+  /*
+   *$blocks['syndicate'] = array(
+   *  'info' => t('Syndicate'),
+   *  'cache' => DRUPAL_NO_CACHE
+   *);
+   */
+  $blocks['social_buttons'] = array(
+    'info' => t('Social Icons'),
+    'cache' => DRUPAL_NO_CACHE
+  );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function social_icons_block_configure($delta = '') {
+  // This example comes from node.module.
+  /*
+   *$form = array();
+   *if ($delta == 'recent') {
+   *  $form['node_recent_block_count'] = array(
+   *    '#type' => 'select',
+   *    '#title' => t('Number of recent content items to display'),
+   *    '#default_value' => variable_get('node_recent_block_count', 10),
+   *    '#options' => drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 30)),
+   *  );
+   *}
+   */
+  $form = array();
+
+  if ($delta == 'social_buttons') {
+
+    $form['social_links'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Links'),
+      '#description' => t('Empty fields would not be displayed.'),
+      '#collapsible' => TRUE, 
+      '#collapsed' => FALSE,
+      );
+    $form['social_links']['twitter_link'] = array(
+      '#type' => 'textfield',
+      '#size' => 60,
+      '#title' => t('Twitter link'),
+      '#default_value' => variable_get('twitter_url', ''),
+      '#weight' => '-10',
+    );
+    $form['social_links']['facebook_link'] = array(
+      '#type' => 'textfield',
+      '#size' => 60,
+      '#title' => t('Facebook link'),
+      '#default_value' => variable_get('facebook_url', ''),
+      '#weight' => '-5',
+    );
+    $form['social_links']['linkedin_link'] = array(
+      '#type' => 'textfield',
+      '#size' => 60,
+      '#title' => t('Linkedin link'),
+      '#default_value' => variable_get('linkedin_url', ''),
+      '#weight' => '0',
+    );
+    $form['social_links']['google_link'] = array(
+      '#type' => 'textfield',
+      '#size' => 60,
+      '#title' => t('Google+ link'),
+      '#default_value' => variable_get('google_url', ''),
+      '#weight' => '5',
+    );
+    $form['display_settings'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Display settings'),
+      '#description' => t('Configure your social media icons display. If you wish to change the icons, please overwrite the css.'),
+      '#collapsible' => TRUE, 
+      '#collapsed' => FALSE,
+      );
+    $form['display_settings']['display'] = array(
+      '#type' => 'select',
+      '#title' => t('Display mode'),
+      '#options' => array('list' => 'List', 'inline' => 'Inline'),
+      '#default_value' => variable_get('display_mode', 'list'),
+    );
+    $form['display_settings']['theme'] = array(
+      '#type' => 'select',
+      '#title' => 'Please select a theme',
+      '#options' => social_icons_themes(),
+      '#default_value' => variable_get('theme', 'fancy_grey'),
+      );
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save($delta = '', $edit = array().
+ */
+function social_icons_block_save($delta = '', $edit = array()) {
+  // This example comes from node.module.
+  /*
+   *if ($delta == 'recent') {
+   *  variable_set('node_recent_block_count', $edit['node_recent_block_count']);
+   *}
+   */
+  /* Your code here */
+
+ if($delta == 'social_buttons') {
+ 	//dpm($edit);
+ 	variable_set('twitter_url', $edit['twitter_link']);
+ 	variable_set('facebook_url', $edit['facebook_link']);
+ 	variable_set('linkedin_url', $edit['linkedin_link']);
+ 	variable_set('google_url', $edit['google_link']);
+  variable_set('display_mode',$edit['display']);
+  variable_set('theme', $edit['theme']);
+ }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function social_icons_block_view($delta = '') {
+  $block = array();
+
+  switch ($delta) {
+  /*
+   *case 'syndicate':
+   *  $block['subject'] = t('Syndicate');
+   *  $block['content'] = theme('feed_icon', array('url' => url('rss.xml'), 'title' => t('Syndicate')));
+   *  break;
+   *
+   *case 'recent':
+   *  if (user_access('access content')) {
+   *    $block['subject'] = t('Recent content');
+   *    if ($nodes = node_get_recent(variable_get('node_recent_block_count', 10))) {
+   *      $block['content'] = theme('node_recent_block', array(
+   *        'nodes' => $nodes,
+   *      ));
+   *    } else {
+   *      $block['content'] = t('No content available.');
+   *    }
+   *  }
+   *  break;
+   */
+    case 'social_buttons':
+      $block['subject'] = t('Follow us on...');
+      $block['content'] = social_media_display();
+      break;
+    
+  }
+  return $block;
+}
+
+function social_media_display(){
+	$block = array();
+
+	$twitter_url = variable_get('twitter_url', '');
+	$twitter_markup = '<li class="twitter_icon"><a href="'.$twitter_url.'" target="_blank">&nbsp;</a></li>';
+
+	$facebook_url = variable_get('facebook_url', '');
+	$facebook_markup = '<li class="facebook_icon"><a href="'.$facebook_url.'" target="_blank">&nbsp;</a></li>';
+
+	$linkedin_url = variable_get('linkedin_url', '');
+	$linkedin_markup = '<li class="linkedin_icon"><a href="'.$linkedin_url.'" target="_blank">&nbsp;</a></li>';
+
+	$google_url = variable_get('google_url', '');
+	$google_markup = '<li class="google_icon"><a href="'.$google_url.'" target="_blank">&nbsp;</a></li>';
+
+
+  $theme = variable_get('theme', '');
+  if($theme != 'none'){
+  drupal_add_css(drupal_get_path('module', 'social_icons') . '/themes/' . $theme . '/' . $theme . '.css', array('group' => CSS_DEFAULT, 'every_page' => TRUE));}
+
+  //// Display mode css
+
+  $display_mode = variable_get('display_mode', '');
+  
+
+	$block['markup'] = array(
+		'#prefix' => '<ul class="social_media_icons '.$display_mode.' clearfix">',
+    '#suffix' => '</ul>',
+	);
+
+	if(!empty($twitter_url)){
+	$block['markup']['twitter'] = array(
+		'twitter' => array(
+			'#type' => 'markup',
+			'#markup' => $twitter_markup,
+			),
+		
+		);
+	}
+	if(!empty($facebook_url)){
+	$block['markup']['facebook'] = array(
+		'facebook' => array(
+			'#type' => 'markup',
+			'#markup' => $facebook_markup,
+			),
+		
+		);
+	}
+	if(!empty($linkedin_url)){
+	$block['markup']['linkedin'] = array(
+		'linkedin' => array(
+			'#type' => 'markup',
+			'#markup' => $linkedin_markup,
+			),
+		
+		);
+	}
+	if(!empty($google_url)){
+	$block['markup']['googleplus'] = array(
+		'google' => array(
+			'#type' => 'markup',
+			'#markup' => $google_markup,
+			),
+		);
+	}
+
+  //dpm($block);
+
+	return $block;
+}
+
+function social_icons_themes() {
+
+//Adding a theme: 
+  //Use the same name for the folder and the stylesheets
+  $theme = array(
+    'fancy_grey' => 'Fancy grey theme',
+    'none' => 'None',
+    ); 
+
+    return $theme; 
+}
