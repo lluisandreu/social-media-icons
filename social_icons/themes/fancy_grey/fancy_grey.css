@@ -4,8 +4,11 @@ li.twitter_icon a {background: url('images/twitter.png'); background-repeat: no-
 li.facebook_icon a {background: url('images/facebook.png'); background-repeat: no-repeat; }
 li.linkedin_icon a {background: url('images/linkedin.png'); background-repeat: no-repeat; }
 li.google_icon a {background: url('images/google.png'); background-repeat: no-repeat; }
+li.pinterest_icon a {background: url('images/pinterest.png'); background-repeat: no-repeat; }
+
 
 li.twitter_icon a:hover {background: url('images/hover-twitter.png'); background-repeat: no-repeat; }
 li.facebook_icon a:hover {background: url('images/hover-facebook.png'); background-repeat: no-repeat; }
 li.linkedin_icon a:hover {background: url('images/hover-linkedin.png'); background-repeat: no-repeat; }
 li.google_icon a:hover {background: url('images/hover-google.png'); background-repeat: no-repeat; }
+li.pinterest_icon a:hover {background: url('images/hover-pinterest.png'); background-repeat: no-repeat; }

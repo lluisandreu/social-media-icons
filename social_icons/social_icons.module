@@ -41,7 +41,7 @@ function social_icons_block_configure($delta = '') {
       '#type' => 'fieldset',
       '#title' => t('Links'),
       '#description' => t('Empty fields would not be displayed.'),
-      '#collapsible' => TRUE, 
+      '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       );
     $form['social_links']['twitter_link'] = array(
@@ -72,11 +72,18 @@ function social_icons_block_configure($delta = '') {
       '#default_value' => variable_get('google_url', ''),
       '#weight' => '5',
     );
+    $form['social_links']['pinterest_link'] = array(
+      '#type' => 'textfield',
+      '#size' => 60,
+      '#title' => t('Pinterest link'),
+      '#default_value' => variable_get('pinterest_url', ''),
+      '#weight' => '5',
+    );
     $form['display_settings'] = array(
       '#type' => 'fieldset',
       '#title' => t('Display settings'),
       '#description' => t('Configure your social media icons display. If you wish to change the icons, please overwrite the css.'),
-      '#collapsible' => TRUE, 
+      '#collapsible' => TRUE,
       '#collapsed' => FALSE,
       );
     $form['display_settings']['display'] = array(
@@ -115,6 +122,7 @@ function social_icons_block_save($delta = '', $edit = array()) {
  	variable_set('google_url', $edit['google_link']);
   variable_set('display_mode',$edit['display']);
   variable_set('theme', $edit['theme']);
+  variable_set('pinterest_url', $edit['pinterest_link']);
  }
 }
 
@@ -148,7 +156,7 @@ function social_icons_block_view($delta = '') {
       $block['subject'] = t('Follow us on...');
       $block['content'] = social_media_display();
       break;
-    
+
   }
   return $block;
 }
@@ -165,6 +173,9 @@ function social_media_display(){
 	$linkedin_url = variable_get('linkedin_url', '');
 	$linkedin_markup = '<li class="linkedin_icon"><a href="'.$linkedin_url.'" target="_blank">&nbsp;</a></li>';
 
+  $pinterest_url = variable_get('pinterest_url', '');
+  $pinterest_markup = '<li class="pinterest_icon"><a href="'.$pinterest_url.'" target="_blank">&nbsp;</a></li>';
+
 	$google_url = variable_get('google_url', '');
 	$google_markup = '<li class="google_icon"><a href="'.$google_url.'" target="_blank">&nbsp;</a></li>';
 
@@ -176,7 +187,7 @@ function social_media_display(){
   //// Display mode css
 
   $display_mode = variable_get('display_mode', '');
-  
+
 
 	$block['markup'] = array(
 		'#prefix' => '<ul class="social_media_icons '.$display_mode.' clearfix">',
@@ -189,7 +200,7 @@ function social_media_display(){
 			'#type' => 'markup',
 			'#markup' => $twitter_markup,
 			),
-		
+
 		);
 	}
 	if(!empty($facebook_url)){
@@ -198,7 +209,7 @@ function social_media_display(){
 			'#type' => 'markup',
 			'#markup' => $facebook_markup,
 			),
-		
+
 		);
 	}
 	if(!empty($linkedin_url)){
@@ -207,9 +218,18 @@ function social_media_display(){
 			'#type' => 'markup',
 			'#markup' => $linkedin_markup,
 			),
-		
+
 		);
 	}
+  if(!empty($pinterest_url)){
+  $block['markup']['pinterest'] = array(
+    'linkedin' => array(
+      '#type' => 'markup',
+      '#markup' => $pinterest_markup,
+      ),
+
+    );
+  }
 	if(!empty($google_url)){
 	$block['markup']['googleplus'] = array(
 		'google' => array(
@@ -226,12 +246,13 @@ function social_media_display(){
 
 function social_icons_themes() {
 
-//Adding a theme: 
+//Adding a theme:
   //Use the same name for the folder and the stylesheets
   $theme = array(
     'fancy_grey' => 'Fancy grey theme',
+    'square' => 'Square',
     'none' => 'None',
-    ); 
+    );
 
-    return $theme; 
+    return $theme;
 }
